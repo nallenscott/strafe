@@ -32,7 +32,7 @@ To store the counters we use three simple [O(1)](https://en.wikipedia.org/wiki/T
 - [INCR](https://redis.io/commands/incr) to count the current counter and retrieve its current value
 - [EXPIRE](https://redis.io/commands/expire) to set an expiration for the current counter
 
-We decided not to use MULTI, therefore in theory a tiny percentage of users could be wrongly allowed. One of the reasons to dismiss MULTI is because we use a Lua driver, [`resty-redis-cluster`](https://github.com/steve0511/resty-redis-cluster), that doesn't support it, but we also use pipeline and hash tags to save two extra round trips.
+We decided not to use MULTI, therefore in theory a tiny percentage of users could be wrongly allowed. One of the reasons to dismiss MULTI is because we use a Lua driver, [`resty-redis-cluster`](https://github.com/steve0511/resty-redis-cluster), that doesn't support it, but we also use [pipelining](https://redis.io/topics/pipelining) and [hash tags](https://redis.io/docs/reference/cluster-spec/#hash-tags) to save two extra round trips.
 
 # Scenario
 
