@@ -8,7 +8,7 @@
 
 # Introduction
 
-Strafe is a simple Lua library that provides rate measurement using Nginx and Redis. It uses a simplified sliding window approach proposed by Cloudflare.
+Strafe is a simple Lua library that provides rate measurement using Nginx and Redis. It uses a simplified sliding window approach proposed by [Cloudflare](https://blog.cloudflare.com/counting-things-a-lot-of-different-things/).
 
 # Algorithm
 
