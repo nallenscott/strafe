@@ -1,0 +1,12 @@
+FROM openresty/openresty:xenial
+
+RUN apt-get update \
+    && apt-get install -y \
+       git \
+    && git config --global url."https://".insteadOf git:// \
+    && luarocks install luafilesystem \
+    && luarocks install lua-resty-perf \
+    && luarocks install luacheck \
+    && luarocks install busted
+
+CMD ["busted"]
