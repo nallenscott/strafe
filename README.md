@@ -12,7 +12,7 @@ Strafe is a simple Lua library that provides rate measurement using Nginx and Re
 
 # Algorithm
 
-The sliding window algorithm is actually very easy to implement. You keep two counters, one for the last minute, and one for the current minute, and then you calculate the current rate by factoring the two counters as if they were in a perfectly constant rate.
+The sliding window algorithm is very easy to implement. You keep two counters, one for the last minute, and one for the current minute, and then you calculate the current rate by factoring the two counters as if they were in a perfectly constant rate.
 
 Let's debug an example of this algorithm in action. Let's say our throttling system allows 10 requests per minute (rpm), and that our past minute counter for a user is (6), and that the current minute counter is (1), and that we are at the 10th second. In the example below, the current rate is 6 which is under 10 rpm.
 
