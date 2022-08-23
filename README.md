@@ -47,10 +47,10 @@ http {
       default_type 'text/plain';
 
       access_by_lua_block {
-        local r_client = r_cluster:new(config)
+        local client = cluster:new(config)
 
         -- let's use `?token={value}` as the key to rate limit
-        local rate, err = strafe.measure(r_client, ngx.var.arg_token)
+        local rate, err = strafe.measure(client, ngx.var.arg_token)
 
         if err then
           ngx.log(ngx.ERR, "err: ", err)
@@ -60,9 +60,10 @@ http {
         -- when the user exceeds 10 rpm we'll reply with a 429
         if rate > 10 then
           ngx.exit(ngx.HTTP_TOO_MANY_REQUESTS)
+        else
+          ngx.say(rate)
         end
 
-        ngx.say(rate)
       }
     }
   }
