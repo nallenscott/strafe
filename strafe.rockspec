@@ -16,6 +16,6 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
-    ["strafe"] = "src/strafe.lua"
+    ["resty.strafe"] = "src/resty/strafe.lua"
   }
 }
