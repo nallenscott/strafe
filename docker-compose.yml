@@ -2,41 +2,32 @@ version: '3.9'
 
 services:
   nginx:
+    depends_on: [redis]
+    ports: [8080:8080]
+    volumes:
+      - ./nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - .:/lua/
     build:
       context: .
-    volumes:
-      - "./nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf"
-      - "./src/:/lua/src/"
-    depends_on:
-      - redis_cluster
-    links:
-      - redis_cluster
-    ports:
-      - "8080:8080"
 
   test:
     command: busted
-    environment:
-      - CI=true
+    volumes:
+      - .:/lua/
+    working_dir: /lua
     build:
       context: .
       dockerfile: Dockerfile.test
-    volumes:
-      - ".:/lua/"
-    working_dir: "/lua"
 
   lint:
     command: luacheck -q .
-    environment:
-      - CI=true
+    volumes:
+      - .:/lua/
+    working_dir: /lua
     build:
       context: .
       dockerfile: Dockerfile.test
-    volumes:
-      - ".:/lua/"
-    working_dir: "/lua"
 
-  redis_cluster:
+  redis:
     image: grokzen/redis-cluster:latest
-    ports:
-      - '6000-6005:6000-6005'
+    expose: [ 7000 ]
