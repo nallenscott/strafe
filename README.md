@@ -26,19 +26,19 @@ past_counter * ((60 - current_second) / 60) + current_counter
 
 # Storage
 
-To store the counters we use three simple [O(1)](https://en.wikipedia.org/wiki/Time_complexity#Constant_time) Redis operations:
+To store the counters, I used three simple [O(1)](https://en.wikipedia.org/wiki/Time_complexity#Constant_time) Redis operations:
 
 - [GET](https://redis.io/commands/get) to retrieve the last counter
 - [INCR](https://redis.io/commands/incr) to count the current counter and retrieve its current value
 - [EXPIRE](https://redis.io/commands/expire) to set an expiration for the current counter
 
-We decided not to use MULTI, therefore in theory a tiny percentage of users could be wrongly allowed. One of the reasons to dismiss MULTI is because we use a Lua driver, [`resty-redis-cluster`](https://github.com/steve0511/resty-redis-cluster), that doesn't support it, but we also use [pipelining](https://redis.io/topics/pipelining) and [hash tags](https://redis.io/docs/reference/cluster-spec/#hash-tags) to save two extra round trips.
+I decided not to use MULTI, therefore in theory a tiny percentage of users could be wrongly allowed. One of the reasons to dismiss MULTI is because the Lua driver [`resty-redis-cluster`](https://github.com/steve0511/resty-redis-cluster) doesn't support it, but I also use [pipelining](https://redis.io/topics/pipelining) and [hash tags](https://redis.io/docs/reference/cluster-spec/#hash-tags) to save two extra round trips.
 
 # Scenario
 
 Nginx already has a rate limiting feature, but it's restricted to the local node. Once you have more than one server behind a load balancer this won't work as expected, so you can use Redis as a distributed storage to keep the rating data. The Nginx config below uses the argument token as the key, and if the rate is above 10 rpm we reply with a 429.
 
-```nginx
+```lua
 http {
   server {
     listen 8080;
